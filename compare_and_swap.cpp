@@ -26,16 +26,16 @@ void fun(){
 }
 */
 
-int a = 1;
+bool a = true;
 class slock{
 public:
 	slock(){
-		while(!__sync_bool_compare_and_swap(&a, 1, 0)){
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		while(!__sync_bool_compare_and_swap(&a, true, false)){
+			std::this_thread::sleep_for(std::chrono::microseconds(50));
 		}
 	}
 	~slock(){
-		__sync_bool_compare_and_swap(&a, 0, 1);
+		__sync_bool_compare_and_swap(&a, false, true);
 	}
 };
 
@@ -48,7 +48,7 @@ void fun2(){
 				if(ticket < 0) break;
 				std::cout << std::this_thread::get_id() <<" : "<< ticket-- << std::endl;	
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			std::this_thread::sleep_for(std::chrono::microseconds(50));
 		}
 }
 
